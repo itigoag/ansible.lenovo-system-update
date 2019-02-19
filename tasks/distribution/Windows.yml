@@ -21,7 +21,7 @@
         string: "{{ ansible_chocolatey.packages | lower }}"
       tags:
         - packages
-      
+
     - name: Update 1 Run System Update
       win_lenovosystem_update:
         search: A
