@@ -1,2 +1,4 @@
 ---
 # defaults file for itigoag.lenovo-system-update
+
+lenovo_system_update_install: true

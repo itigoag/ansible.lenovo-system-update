@@ -1,2 +1,37 @@
 ---
 # tasks file for itigoag.lenovo-system-update
+
+- name: gather facts from chocolatey
+  win_chocolatey_facts:
+  when: ansible_chocolatey is undefined
+  tags:
+    - configuration
+    - packages
+
+- block:
+
+    - name: install lenovo system update
+      win_chocolatey:
+        name: lenovo-thinkvantage-system-update
+      when: >
+        packages is undefined or
+        not ( string | json_query(query) )
+      vars:
+        query: '[?package==`lenovo-thinkvantage-system-update`]'
+        string: "{{ ansible_chocolatey.packages | lower }}"
+      tags:
+        - packages
+      
+    - name: Update 1 Run System Update
+      win_lenovosystem_update:
+        search: A
+        action: INSTALL
+
+    - name: Update 2 Run System Update
+      win_lenovosystem_update:
+        search: A
+        action: INSTALL
+
+  when: >
+    lenovo_system_update_install and (packages is undefined or packages['lenovo-thinkvantage-system-update'] is defined) or
+    packages is defined and packages['lenovo-thinkvantage-system-update'] is defined
